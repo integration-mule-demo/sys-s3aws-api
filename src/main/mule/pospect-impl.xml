@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<sub-flow name="pospect-info-subflow" doc:id="f9da5c15-5922-4a3d-97b2-7cceb72e57c6" >
+		<set-variable value="#[payload.prospectId]" doc:name="Set prospectId" doc:id="d592eca9-5624-4335-8bc7-c9d3eba9d5f2" variableName="prospectId"/>
+		<set-variable value="${pdf.file}" doc:name="Set pdfFile" doc:id="4fcbecd5-bdcc-4fb8-a555-e2004a0efd92" variableName="pdfFile"/>
+		<ee:transform doc:name="Generate PDF" doc:id="2dabe2b6-ea4d-4fd3-917d-c261c84248dd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import fromBase64 from dw::core::Binaries
+output multipart/form-data
+---
+{
+    parts:{
+        base64Content:{
+            headers:{
+                "Content-Type":"application/pdf"
+            },
+            content: fromBase64(vars.pdfFile)
+            },
+        }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-payload value="#[payload]" doc:name="Build PDF" doc:id="a3a31e4d-1dbb-43ec-92a2-eaa094fc31ba" mimeType="application/pdf"/>
+		<s3:create-object doc:name="Store PDF" doc:id="b75cbc59-cbc7-4580-9624-de17285d8514" config-ref="Amazon_S3_Configuration" bucketName="${secure::s3.bucket}" key="#[&quot;pdfFor-&quot; ++ vars.prospectId default '' ++ '.pdf']"/>
+		<ee:transform doc:name="Format Output" doc:id="c698eb28-c6a5-4a54-99bb-b3cc4702988a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

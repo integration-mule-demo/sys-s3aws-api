@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
 	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
 	
 	<http:listener-config name="sys-s3aws-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="${http.port}" protocol="HTTPS">
@@ -27,5 +28,8 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
         <secure-properties:encrypt algorithm="Blowfish" />
     </secure-properties:config>
     <configuration doc:name="Configuration" doc:id="dd050317-6fa2-47cf-bbc3-3349b9f7d09b" defaultErrorHandler-ref="appGlobalErrorHandler" />
-    <configuration-properties doc:name="Configuration properties" doc:id="1901b2ad-6343-4b65-95c3-b9eb3b4594e7" file="mule-exceptions.properties" />	    	
+    <configuration-properties doc:name="Configuration properties" doc:id="1901b2ad-6343-4b65-95c3-b9eb3b4594e7" file="mule-exceptions.properties" />
+	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="ba03e962-bc55-436d-9392-6ce60f3259d5" >
+		<s3:basic-connection accessKey="${secure::s3.key}" secretKey="${secure::s3.secret}" region="${secure::s3.region}" />
+	</s3:config>	    	
 </mule>

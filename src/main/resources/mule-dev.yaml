@@ -4,7 +4,12 @@ tls:
   key: "![3lEumFBKcKU=]"
   pwd: "![3lEumFBKcKU=]"
 
-salesforce:
-  user:  "![drKpu7GgG+uZSfWEKGDYT+iHf0NLQuDpFrk6UR1Lbsw=]"
-  pwd:  "$3cur3Password"
-  token:  "![g7P6CqL9Bry5YBUF7biicrQ11maKoN73qeEl3PdaaL8=]"
+s3:
+  key:  "![JT7HizBIAs0sg0+q7NrB2YwXE0jkIJFo]"
+  secret:  "![7CbY5t/+30OoOBXPmFaQATIK/rVLf2i1eQayPwkcpwTtBnlWZYP6K5okFG+xlXRE]"
+  region:  "![1+jnpcedew5hB4/RPaXWrQ==]"
+  bucket: "![0aA/qVvlIqs0oYTEEdcykZX/hU2MP5SZtkf0vOU0ff8qz65tXHco4A==]"
+  
+  
+  
+
