@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 	<sub-flow name="pospect-info-subflow" doc:id="f9da5c15-5922-4a3d-97b2-7cceb72e57c6" >
+		<json-logger:logger doc:name="Start" doc:id="7345184e-d4a3-42c0-9e39-51ffcdf0f1b0" config-ref="JSON_Logger_Config" message="Starting flow"/>
 		<set-variable value="#[payload.prospectId]" doc:name="Set prospectId" doc:id="d592eca9-5624-4335-8bc7-c9d3eba9d5f2" variableName="prospectId"/>
 		<set-variable value="${pdf.file}" doc:name="Set pdfFile" doc:id="4fcbecd5-bdcc-4fb8-a555-e2004a0efd92" variableName="pdfFile"/>
 		<ee:transform doc:name="Generate PDF" doc:id="2dabe2b6-ea4d-4fd3-917d-c261c84248dd" >
@@ -35,8 +37,11 @@ output multipart/form-data
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+{ 
+	"message": "Document stored successfully"
+}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<json-logger:logger doc:name="End" doc:id="70fe37a6-b8c2-410d-88eb-ba3d2fe6bda3" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END"/>
 	</sub-flow>
 </mule>
